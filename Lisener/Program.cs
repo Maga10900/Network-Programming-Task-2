@@ -4,7 +4,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text.Json;
 
-var ip = IPAddress.Parse("10.2.14.10");
+var ip = IPAddress.Parse("127.0.0.1");
 var port = 27001;
 
 var lisener = new TcpListener(ip, port);
@@ -38,9 +38,11 @@ while (true)
 
 
             case Command.run:
+                bw.Write(JsonSerializer.Serialize(command.Param));
                 break;
 
             case Command.kill:
+                bw.Write(JsonSerializer.Serialize(command.Param));
                 break;
 
             default:

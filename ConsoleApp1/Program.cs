@@ -1,4 +1,5 @@
 ﻿using ConsoleApp1;
+using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
 using System.Text.Json;
@@ -37,7 +38,7 @@ while (true)
     switch (input[0])
     {
         case Command.processList:
-            command = new Command() { Text = input[1] };
+            command = new Command() { Text = input[0] };
             bw.Write(JsonSerializer.Serialize(command));
             responce = br.ReadString();
             var processList = JsonSerializer.Deserialize<string[]>(responce);
@@ -48,9 +49,25 @@ while (true)
             break;
 
         case Command.run:
+            command = new Command() { Text = input[0],Param = input[1] };
+            bw.Write(JsonSerializer.Serialize(command));
+            responce = br.ReadString();
+            string pr = JsonSerializer.Deserialize<string>(responce);
+            Process.Start(pr);
             break;
 
         case Command.kill:
+            command = new Command() { Text = input[0], Param = input[1] };
+            bw.Write(JsonSerializer.Serialize(command));
+            responce = br.ReadString();
+            string fm = JsonSerializer.Deserialize<string>(responce);
+            foreach (var item in Process.GetProcesses())
+            {
+                if(fm.ToLower() == item.ProcessName.ToLower())
+                {
+                    item.Kill();
+                }
+            };
             break;
         default:
             break;
